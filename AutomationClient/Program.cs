@@ -3,7 +3,8 @@ using System.Security.Principal;
 
 namespace AutomationClient
 {
-    using TaskServiceReference;
+    //using TaskServiceReference;
+    using AutomationClient.WinSvcReference;
 
     internal class Program
     {
@@ -11,7 +12,10 @@ namespace AutomationClient
         {
             try
             {
-                var client = new GitHelperClient("NetTcpBinding_IGitHelper");
+                var client = new 
+                    //GitHelperClient("NetTcpBinding_IGitHelper")
+                    TaskHelperClient("NetTcpBinding_ITaskHelper")
+                    ;
 
                 client.ClientCredentials.Windows.AllowedImpersonationLevel = TokenImpersonationLevel.Impersonation;
 

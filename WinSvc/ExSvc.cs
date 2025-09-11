@@ -1,7 +1,9 @@
-﻿using System.Timers;
-using System.Diagnostics;
-using System.ServiceProcess;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.ServiceModel;
+using System.ServiceModel.Description;
+using System.ServiceProcess;
+using System.Timers;
 
 namespace WinSvc
 {
@@ -47,8 +49,8 @@ namespace WinSvc
         #region Fields
 
         Timer _timer;
-
         int _eventId = 1;
+        ServiceHost _host;
 
         #endregion
 
@@ -91,6 +93,16 @@ namespace WinSvc
 
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
+            // using (var _host = new ServiceHost(typeof(TaskHelper)))
+            _host = new ServiceHost(typeof(TaskHelper));
+            // {
+                _host.Authorization.PrincipalPermissionMode = PrincipalPermissionMode.UseWindowsGroups;
+
+                // Open the ServiceHostBase to create listeners and start listening for messages.
+                _host.Open();
+                //Log.Information("Auto Task Service lisnening");
+            // }
+
             eventLog.WriteEntry("In OnStart");
 
             // Update the service state to Running.
@@ -109,6 +121,8 @@ namespace WinSvc
             };
             
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+            _host.Close();
 
             // Update the service state to Stopped.
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
