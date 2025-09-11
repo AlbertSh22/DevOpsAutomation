@@ -1,0 +1,2 @@
+﻿CREATE USER [wcf] FOR LOGIN [DESKTOP-S40AS1C\wcf];
+
