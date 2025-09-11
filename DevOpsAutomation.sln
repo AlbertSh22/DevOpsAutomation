@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomationClient", "Automat
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DataTier", "DataTier\DataTier.sqlproj", "{BE45C2CC-ACAB-46DC-9C0A-29035C6196C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinSvc", "WinSvc\WinSvc.csproj", "{819FC2E0-6CC6-4B0F-9C62-F5F5917A0B81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{BE45C2CC-ACAB-46DC-9C0A-29035C6196C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE45C2CC-ACAB-46DC-9C0A-29035C6196C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE45C2CC-ACAB-46DC-9C0A-29035C6196C1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{819FC2E0-6CC6-4B0F-9C62-F5F5917A0B81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{819FC2E0-6CC6-4B0F-9C62-F5F5917A0B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{819FC2E0-6CC6-4B0F-9C62-F5F5917A0B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{819FC2E0-6CC6-4B0F-9C62-F5F5917A0B81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
