@@ -25,6 +25,8 @@
     <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="d87795e5-9e1b-4622-ba7f-eb0bb57b49b3" SourceId="1" SourceUrl="net.tcp://localhost:9000/WinSvc/service/mex" />
     <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="e2fe05b2-23bf-4d54-a2f3-2a71c0332b74" SourceId="1" SourceUrl="net.tcp://localhost:9000/WinSvc/service/mex" />
     <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="79ccd94b-cc5d-4500-a650-a1af6bdd4bb4" SourceId="1" SourceUrl="net.tcp://localhost:9000/WinSvc/service/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="10bd3004-28eb-4d12-bb72-a9d7367dcccb" SourceId="1" SourceUrl="net.tcp://localhost:9000/WinSvc/service/mex" />
+    <MetadataFile FileName="System.xsd" MetadataType="Schema" ID="18cab679-d290-4a0e-97c0-0e13d77b7594" SourceId="1" SourceUrl="net.tcp://localhost:9000/WinSvc/service/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

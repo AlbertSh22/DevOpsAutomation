@@ -40,7 +40,7 @@ namespace TaskService
                     {
                         // Make a system call in the caller's context and ACLs 
                         // on the system resource are enforced in the caller's context. 
-                        Log.Information("Impersonating the caller imperatively");
+                        Log.Debug("Impersonating the caller imperatively");
 
                         DumpIdentityInfo();
 

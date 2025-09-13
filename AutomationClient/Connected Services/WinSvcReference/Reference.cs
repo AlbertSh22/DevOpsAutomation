@@ -20,6 +20,14 @@ namespace AutomationClient.WinSvcReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/BackupRepo", ReplyAction="http://tempuri.org/ITaskHelper/BackupRepoResponse")]
         System.Threading.Tasks.Task BackupRepoAsync(string url, string path);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/ExecSp", ReplyAction="http://tempuri.org/ITaskHelper/ExecSpResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.Generic.Dictionary<string, object>))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))]
+        System.Tuple<int, System.Collections.Generic.Dictionary<string, object>, object[]> ExecSp(string spName, System.Collections.Generic.Dictionary<string, object> prms);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/ExecSp", ReplyAction="http://tempuri.org/ITaskHelper/ExecSpResponse")]
+        System.Threading.Tasks.Task<System.Tuple<int, System.Collections.Generic.Dictionary<string, object>, object[]>> ExecSpAsync(string spName, System.Collections.Generic.Dictionary<string, object> prms);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -55,6 +63,14 @@ namespace AutomationClient.WinSvcReference {
         
         public System.Threading.Tasks.Task BackupRepoAsync(string url, string path) {
             return base.Channel.BackupRepoAsync(url, path);
+        }
+        
+        public System.Tuple<int, System.Collections.Generic.Dictionary<string, object>, object[]> ExecSp(string spName, System.Collections.Generic.Dictionary<string, object> prms) {
+            return base.Channel.ExecSp(spName, prms);
+        }
+        
+        public System.Threading.Tasks.Task<System.Tuple<int, System.Collections.Generic.Dictionary<string, object>, object[]>> ExecSpAsync(string spName, System.Collections.Generic.Dictionary<string, object> prms) {
+            return base.Channel.ExecSpAsync(spName, prms);
         }
     }
 }

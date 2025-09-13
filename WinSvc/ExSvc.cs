@@ -1,12 +1,17 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Timers;
+using System.Diagnostics;
+using System.ServiceProcess;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.ServiceModel.Description;
-using System.ServiceProcess;
-using System.Timers;
+
+using Serilog;
 
 namespace WinSvc
 {
+    #region Interop
+
     public enum ServiceState
     {
         SERVICE_STOPPED = 0x00000001,
@@ -29,6 +34,8 @@ namespace WinSvc
         public int dwCheckPoint;
         public int dwWaitHint;
     };
+
+    #endregion
 
     public partial class ExSvc : ServiceBase
     {
@@ -84,65 +91,116 @@ namespace WinSvc
 
         protected override void OnStart(string[] args)
         {
-            // Update the service state to Start Pending.
-            var serviceStatus = new ServiceStatus
+            try
             {
-                dwCurrentState = ServiceState.SERVICE_START_PENDING,
-                dwWaitHint = 100000
-            };
+                var message = "In OnStart.";
 
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+                Log.Information(message);
 
-            // using (var _host = new ServiceHost(typeof(TaskHelper)))
-            _host = new ServiceHost(typeof(TaskHelper));
-            // {
+                eventLog.WriteEntry(message);
+
+                // Update the service state to Start Pending.
+                var serviceStatus = new ServiceStatus
+                {
+                    dwCurrentState = ServiceState.SERVICE_START_PENDING,
+                    dwWaitHint = 100000
+                };
+
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+                _host = new ServiceHost(typeof(TaskHelper));
                 _host.Authorization.PrincipalPermissionMode = PrincipalPermissionMode.UseWindowsGroups;
 
                 // Open the ServiceHostBase to create listeners and start listening for messages.
                 _host.Open();
-                //Log.Information("Auto Task Service lisnening");
-            // }
 
-            eventLog.WriteEntry("In OnStart");
+                Log.Information("Auto Task Service lisnening");
 
-            // Update the service state to Running.
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
+                // Update the service state to Running.
+                serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
 
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "OnStart failed.");
+
+                throw;
+            }
         }
 
         protected override void OnStop()
         {
-            // Update the service state to Stop Pending.
-            var serviceStatus = new ServiceStatus 
+            try
             {
-                dwCurrentState = ServiceState.SERVICE_STOP_PENDING,
-                dwWaitHint = 100000
-            };
-            
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+                var message = "In OnStop.";
 
-            _host.Close();
+                Log.Information(message);
 
-            // Update the service state to Stopped.
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
+                eventLog.WriteEntry(message);
 
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+                // Update the service state to Stop Pending.
+                var serviceStatus = new ServiceStatus
+                {
+                    dwCurrentState = ServiceState.SERVICE_STOP_PENDING,
+                    dwWaitHint = 100000
+                };
 
-            eventLog.WriteEntry("In OnStop.");
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+                Log.Information("Shuting down ...");
+                _host.Close();
+
+                // Update the service state to Stopped.
+                serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
+
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "OnStop failed.");
+
+                throw;
+            }
         }
 
         protected override void OnContinue()
         {
-            //base.OnContinue();
+            try
+            {
+                var message = "In OnContinue.";
 
-            eventLog.WriteEntry("In OnContinue.");
+                Log.Information(message);
+
+                eventLog.WriteEntry(message);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "OnContinue failed.");
+
+                throw;
+            }
         }
 
         public void OnTimer(object sender, ElapsedEventArgs args)
         {
-            // TODO: Insert monitoring activities here.
-            eventLog.WriteEntry("Monitoring the System", EventLogEntryType.Information, _eventId++);
+            try
+            {
+                var message = "Monitoring the System";
+
+                // TODO: Insert monitoring activities here.
+                // ...
+
+                Log.Information($"{message}, eventId: {_eventId}");
+
+                eventLog.WriteEntry(message, EventLogEntryType.Information, _eventId++);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "OnTimer failed.");
+
+                throw;
+            }
         }
 
         #endregion

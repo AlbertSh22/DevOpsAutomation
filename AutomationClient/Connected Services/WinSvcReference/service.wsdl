@@ -37,6 +37,8 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import namespace="http://tempuri.org/" />
       <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/System" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="ITaskHelper_BackupRepo_InputMessage">
@@ -45,10 +47,20 @@
   <wsdl:message name="ITaskHelper_BackupRepo_OutputMessage">
     <wsdl:part name="parameters" element="tns:BackupRepoResponse" />
   </wsdl:message>
+  <wsdl:message name="ITaskHelper_ExecSp_InputMessage">
+    <wsdl:part name="parameters" element="tns:ExecSp" />
+  </wsdl:message>
+  <wsdl:message name="ITaskHelper_ExecSp_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ExecSpResponse" />
+  </wsdl:message>
   <wsdl:portType name="ITaskHelper">
     <wsdl:operation name="BackupRepo">
       <wsdl:input wsaw:Action="http://tempuri.org/ITaskHelper/BackupRepo" message="tns:ITaskHelper_BackupRepo_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ITaskHelper/BackupRepoResponse" message="tns:ITaskHelper_BackupRepo_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecSp">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITaskHelper/ExecSp" message="tns:ITaskHelper_ExecSp_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITaskHelper/ExecSpResponse" message="tns:ITaskHelper_ExecSp_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="NetTcpBinding_ITaskHelper" type="tns:ITaskHelper">
@@ -64,6 +76,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ExecSp">
+      <soap12:operation soapAction="http://tempuri.org/ITaskHelper/ExecSp" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="TaskHelper">
     <wsdl:port name="NetTcpBinding_ITaskHelper" binding="tns:NetTcpBinding_ITaskHelper">
@@ -71,7 +92,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>net.tcp://localhost:9000/WinSvc/service</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Spn>host/DESKTOP-S40AS1C</Spn>
+          <Upn>DESKTOP-S40AS1C\Альберт</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>

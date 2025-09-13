@@ -39,8 +39,8 @@
             // 
             // serviceInstaller
             // 
-            this.serviceInstaller.Description = "A sample service.";
-            this.serviceInstaller.DisplayName = "ExSvc Display Name.";
+            this.serviceInstaller.Description = "A sample service";
+            this.serviceInstaller.DisplayName = "ExSvc Display Name";
             this.serviceInstaller.ServiceName = "ExSvc";
             // 
             // ProjectInstaller
