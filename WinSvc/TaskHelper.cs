@@ -1,18 +1,22 @@
-﻿using System;
-using System.ServiceModel;
+﻿using Serilog;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Security.Principal;
-using System.Collections.Generic;
-
-using Serilog;
+using System.ServiceModel;
+using WinSvc.Dal;
+using WinSvc.Models;
 
 namespace WinSvc
 {
     #region Interface
 
-    [ServiceContract] // (Namespace="http://RoboSvc. ...")
+    [ServiceContract]
     public interface ITaskHelper
     {
         #region Obsolete
@@ -23,7 +27,46 @@ namespace WinSvc
         #endregion
 
         [OperationContract]
-        Tuple<int, Dictionary<string, object>, object[]> ExecSp(string spName, Dictionary<string, object> prms);
+        [FaultContract(typeof(TaskFault))]
+        SpResult ExecSp(string spName, Dictionary<string, object> prms);
+    }
+
+    #endregion
+
+    #region ErrorHandling
+
+    [DataContract]
+    public class TaskFault
+    {
+        #region Properties
+
+        [DataMember]
+        public string Operation { get; set; }
+
+        [DataMember]
+        public string ProblemType { get; set; }
+
+        #endregion
+    }
+
+    #endregion
+
+    #region Models
+
+    [DataContract]
+    public class SpResult
+    { 
+        [DataMember]
+        public int ReturnValue { get; set; }
+
+        [DataMember]
+        public Dictionary<string, object> OutputParams { get; set; }
+
+        [DataMember]
+        public string[] Columns { get; set; }
+
+        [DataMember]
+        public object[][] DataSet { get; set; }
     }
 
     #endregion
@@ -78,8 +121,10 @@ namespace WinSvc
 
         #endregion
 
-        public Tuple<int, Dictionary<string, object>, object[]> ExecSp(string spName, Dictionary<string, object> prms)
+        public SpResult ExecSp(string spName, Dictionary<string, object> prms)
         {
+            var method = MethodBase.GetCurrentMethod().Name;
+
             try
             {
                 Log.Debug($"Try to exec: {spName} ...");
@@ -89,29 +134,51 @@ namespace WinSvc
                 var ctx = ServiceSecurityContext.Current;
                 var lvl = ctx.WindowsIdentity.ImpersonationLevel;
 
-                if ((lvl == TokenImpersonationLevel.Impersonation)
-                    || (lvl == TokenImpersonationLevel.Delegation)
+                if ((lvl != TokenImpersonationLevel.Impersonation)
+                    && (lvl != TokenImpersonationLevel.Delegation)
                 )
                 {
-                    // Impersonate.
-                    using (ctx.WindowsIdentity.Impersonate())
-                    {
-                        // Make a system call in the caller's context and ACLs 
-                        // on the system resource are enforced in the caller's context. 
-                        Log.Debug("Impersonating the caller imperatively");
+                    var err = $"This level ({lvl}) of impersonation is not allowed";
+                    
+                    Log.Error(err);
+                    
+                    var fault = new TaskFault 
+                    { 
+                        Operation = method,
+                        ProblemType = err
+                    };
 
-                        DumpIdentityInfo();
-
-                        return ExecSpInternal(spName, prms);
-                    }
+                    throw new FaultException<TaskFault>(fault);
                 }
+
+                // Impersonate.
+                using (ctx.WindowsIdentity.Impersonate())
+                {
+                    // Make a system call in the caller's context and ACLs 
+                    // on the system resource are enforced in the caller's context. 
+                    Log.Debug("Impersonating the caller imperatively");
+
+                    DumpIdentityInfo();
+
+                    return ExecSpInternal(spName, prms);
+                }
+            }
+            catch (FaultException<TaskFault>)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "ExecSp failed");
-            }
+                Log.Error(ex, $"{method} failed");
 
-            return null; //  string.Empty;
+                var fault = new TaskFault
+                {
+                    Operation = method,
+                    ProblemType = ex.Message
+                };
+
+                throw new FaultException<TaskFault>(fault);
+            }
         }
 
         static void DumpIdentityInfo()
@@ -169,8 +236,11 @@ namespace WinSvc
 
         #endregion
 
-        static Tuple<int, Dictionary<string, object>, object[]> ExecSpInternal(string spName, Dictionary<string, object> prms)
+        static SpResult ExecSpInternal(string spName, Dictionary<string, object> prms)
         {
+
+            List<SysParam> sysPrms = GetParams(spName);
+
             int retVal = 0;
             var outVars = new Dictionary<string, object>();
             var results = new List<object>();
@@ -187,6 +257,39 @@ namespace WinSvc
 
                 // TODO: to add params
                 // ...
+                if (prms != null && prms.Any())
+                {
+                    foreach (var entry in prms)
+                    {
+                        var key = entry.Key;
+
+                        var sysPrm = sysPrms.Where(x => x.ParameterName == $"@{key}").SingleOrDefault();
+
+                        if (sysPrm == default)
+                        {
+                            throw new InvalidOperationException($"pram not found");
+                        }
+
+                        var typ = sysPrm.DataType;
+
+                        var sqlParam = new SqlParameter(sysPrm.ParameterName, entry.Value);
+
+                        switch (typ)
+                        {
+                            case "char":
+                                sqlParam.SqlDbType = SqlDbType.Char;
+                                sqlParam.Size = sysPrm.MaxLength;
+                                break;
+
+                            // etc ...
+                            
+                            default:
+                                throw new InvalidOperationException("Not supported type");
+                        }
+
+                        command.Parameters.Add(sqlParam);
+                    }
+                }
 
                 var returnParameter = command.Parameters.Add("@ReturnVal", SqlDbType.Int);
                 returnParameter.Direction = ParameterDirection.ReturnValue;
@@ -195,20 +298,56 @@ namespace WinSvc
 
                 using (var reader = command.ExecuteReader())
                 {
+                    var cols = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToArray();
+
                     // read sp resultset
-                    reader.Read();
+                    var rows = new List<object[]>();
 
-                    var vals = new object[reader.FieldCount];
+                    while (reader.Read())
+                    { 
+                        var row = new object[reader.FieldCount];
 
-                    reader.GetValues(vals);
+                        reader.GetValues(row);
+
+                        rows.Add(row);
+                    }
 
                     // next result to return value result
                     reader.NextResult();
 
                     retVal = (int)returnParameter.Value;
 
-                    return Tuple.Create(retVal, outVars, vals);
+                    var res = new SpResult
+                    {
+                        ReturnValue = retVal,
+                        OutputParams = outVars,
+                        Columns = cols,
+                        DataSet = rows.ToArray()
+                    };
+
+                    return res;
                 }
+            }
+        }
+
+        static List<SysParam> GetParams(string spName)
+        {
+            using (var context = new RoboSvcEntities())
+            {
+#if DEBUG
+                context.Database.Log = s => Log.Debug(s);
+#endif
+
+                var prms = context.Database.SqlQuery<SysParam>($@"select [name] ParameterName, TYPE_NAME(user_type_id) DataType, max_length AS MaxLength 
+from sys.parameters 
+where object_id = OBJECT_ID('{spName}')").ToList();
+
+                if (prms.Any())
+                { 
+                    Log.Debug($"param name: {prms.First().ParameterName}");
+                }
+
+                return prms;
             }
         }
 

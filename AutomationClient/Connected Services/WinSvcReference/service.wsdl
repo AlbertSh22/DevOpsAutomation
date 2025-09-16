@@ -36,46 +36,31 @@
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/WinSvc" />
       <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-      <xsd:import namespace="http://schemas.datacontract.org/2004/07/System" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="ITaskHelper_BackupRepo_InputMessage">
-    <wsdl:part name="parameters" element="tns:BackupRepo" />
-  </wsdl:message>
-  <wsdl:message name="ITaskHelper_BackupRepo_OutputMessage">
-    <wsdl:part name="parameters" element="tns:BackupRepoResponse" />
-  </wsdl:message>
   <wsdl:message name="ITaskHelper_ExecSp_InputMessage">
     <wsdl:part name="parameters" element="tns:ExecSp" />
   </wsdl:message>
   <wsdl:message name="ITaskHelper_ExecSp_OutputMessage">
     <wsdl:part name="parameters" element="tns:ExecSpResponse" />
   </wsdl:message>
+  <wsdl:message name="ITaskHelper_ExecSp_TaskFaultFault_FaultMessage">
+    <wsdl:part xmlns:q1="http://schemas.datacontract.org/2004/07/WinSvc" name="detail" element="q1:TaskFault" />
+  </wsdl:message>
   <wsdl:portType name="ITaskHelper">
-    <wsdl:operation name="BackupRepo">
-      <wsdl:input wsaw:Action="http://tempuri.org/ITaskHelper/BackupRepo" message="tns:ITaskHelper_BackupRepo_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/ITaskHelper/BackupRepoResponse" message="tns:ITaskHelper_BackupRepo_OutputMessage" />
-    </wsdl:operation>
     <wsdl:operation name="ExecSp">
       <wsdl:input wsaw:Action="http://tempuri.org/ITaskHelper/ExecSp" message="tns:ITaskHelper_ExecSp_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ITaskHelper/ExecSpResponse" message="tns:ITaskHelper_ExecSp_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ITaskHelper/ExecSpTaskFaultFault" name="TaskFaultFault" message="tns:ITaskHelper_ExecSp_TaskFaultFault_FaultMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="NetTcpBinding_ITaskHelper" type="tns:ITaskHelper">
     <wsp:PolicyReference URI="#NetTcpBinding_ITaskHelper_policy">
     </wsp:PolicyReference>
     <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
-    <wsdl:operation name="BackupRepo">
-      <soap12:operation soapAction="http://tempuri.org/ITaskHelper/BackupRepo" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="ExecSp">
       <soap12:operation soapAction="http://tempuri.org/ITaskHelper/ExecSp" style="document" />
       <wsdl:input>
@@ -84,6 +69,9 @@
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
+      <wsdl:fault name="TaskFaultFault">
+        <soap12:fault use="literal" name="TaskFaultFault" namespace="" />
+      </wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="TaskHelper">

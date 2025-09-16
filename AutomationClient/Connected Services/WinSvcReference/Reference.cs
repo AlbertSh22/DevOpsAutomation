@@ -9,25 +9,179 @@
 //------------------------------------------------------------------------------
 
 namespace AutomationClient.WinSvcReference {
+    using System.Runtime.Serialization;
+    using System;
     
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SpResult", Namespace="http://schemas.datacontract.org/2004/07/WinSvc")]
+    [System.SerializableAttribute()]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(System.Collections.Generic.Dictionary<string, object>))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(string[]))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(object[][]))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(object[]))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(AutomationClient.WinSvcReference.TaskFault))]
+    public partial class SpResult : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string[] ColumnsField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private object[][] DataSetField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.Dictionary<string, object> OutputParamsField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int ReturnValueField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string[] Columns {
+            get {
+                return this.ColumnsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ColumnsField, value) != true)) {
+                    this.ColumnsField = value;
+                    this.RaisePropertyChanged("Columns");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public object[][] DataSet {
+            get {
+                return this.DataSetField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DataSetField, value) != true)) {
+                    this.DataSetField = value;
+                    this.RaisePropertyChanged("DataSet");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.Dictionary<string, object> OutputParams {
+            get {
+                return this.OutputParamsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OutputParamsField, value) != true)) {
+                    this.OutputParamsField = value;
+                    this.RaisePropertyChanged("OutputParams");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ReturnValue {
+            get {
+                return this.ReturnValueField;
+            }
+            set {
+                if ((this.ReturnValueField.Equals(value) != true)) {
+                    this.ReturnValueField = value;
+                    this.RaisePropertyChanged("ReturnValue");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TaskFault", Namespace="http://schemas.datacontract.org/2004/07/WinSvc")]
+    [System.SerializableAttribute()]
+    public partial class TaskFault : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OperationField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ProblemTypeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Operation {
+            get {
+                return this.OperationField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OperationField, value) != true)) {
+                    this.OperationField = value;
+                    this.RaisePropertyChanged("Operation");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ProblemType {
+            get {
+                return this.ProblemTypeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ProblemTypeField, value) != true)) {
+                    this.ProblemTypeField = value;
+                    this.RaisePropertyChanged("ProblemType");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WinSvcReference.ITaskHelper")]
     public interface ITaskHelper {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/BackupRepo", ReplyAction="http://tempuri.org/ITaskHelper/BackupRepoResponse")]
-        void BackupRepo(string url, string path);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/BackupRepo", ReplyAction="http://tempuri.org/ITaskHelper/BackupRepoResponse")]
-        System.Threading.Tasks.Task BackupRepoAsync(string url, string path);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/ExecSp", ReplyAction="http://tempuri.org/ITaskHelper/ExecSpResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(AutomationClient.WinSvcReference.TaskFault), Action="http://tempuri.org/ITaskHelper/ExecSpTaskFaultFault", Name="TaskFault", Namespace="http://schemas.datacontract.org/2004/07/WinSvc")]
+        AutomationClient.WinSvcReference.SpResult ExecSp(string spName, System.Collections.Generic.Dictionary<string, object> prms);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/ExecSp", ReplyAction="http://tempuri.org/ITaskHelper/ExecSpResponse")]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.Generic.Dictionary<string, object>))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))]
-        System.Tuple<int, System.Collections.Generic.Dictionary<string, object>, object[]> ExecSp(string spName, System.Collections.Generic.Dictionary<string, object> prms);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/ExecSp", ReplyAction="http://tempuri.org/ITaskHelper/ExecSpResponse")]
-        System.Threading.Tasks.Task<System.Tuple<int, System.Collections.Generic.Dictionary<string, object>, object[]>> ExecSpAsync(string spName, System.Collections.Generic.Dictionary<string, object> prms);
+        System.Threading.Tasks.Task<AutomationClient.WinSvcReference.SpResult> ExecSpAsync(string spName, System.Collections.Generic.Dictionary<string, object> prms);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -57,19 +211,11 @@ namespace AutomationClient.WinSvcReference {
                 base(binding, remoteAddress) {
         }
         
-        public void BackupRepo(string url, string path) {
-            base.Channel.BackupRepo(url, path);
-        }
-        
-        public System.Threading.Tasks.Task BackupRepoAsync(string url, string path) {
-            return base.Channel.BackupRepoAsync(url, path);
-        }
-        
-        public System.Tuple<int, System.Collections.Generic.Dictionary<string, object>, object[]> ExecSp(string spName, System.Collections.Generic.Dictionary<string, object> prms) {
+        public AutomationClient.WinSvcReference.SpResult ExecSp(string spName, System.Collections.Generic.Dictionary<string, object> prms) {
             return base.Channel.ExecSp(spName, prms);
         }
         
-        public System.Threading.Tasks.Task<System.Tuple<int, System.Collections.Generic.Dictionary<string, object>, object[]>> ExecSpAsync(string spName, System.Collections.Generic.Dictionary<string, object> prms) {
+        public System.Threading.Tasks.Task<AutomationClient.WinSvcReference.SpResult> ExecSpAsync(string spName, System.Collections.Generic.Dictionary<string, object> prms) {
             return base.Channel.ExecSpAsync(spName, prms);
         }
     }

@@ -66,5 +66,6 @@
     <Build Include="Security\wcf.sql" />
     <Build Include="Security\DESKTOP-S40AS1C_wcf.sql" />
     <Build Include="dbo\Stored Procedures\sp_test_impersonation.sql" />
+    <Build Include="dbo\Stored Procedures\sp_tst.sql" />
   </ItemGroup>
 </Project>

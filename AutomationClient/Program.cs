@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ServiceModel;
 using System.Security.Principal;
 using System.Collections.Generic;
 
@@ -16,21 +17,41 @@ namespace AutomationClient
 
         static void Main(string[] args)
         {
-            try
+            using (var client = new TaskHelperClient(EndpointConfigurationName))
             {
-                var client = new TaskHelperClient(EndpointConfigurationName);
+                try
+                {
+                    client.ClientCredentials.Windows.AllowedImpersonationLevel = TokenImpersonationLevel.Impersonation;
 
-                client.ClientCredentials.Windows.AllowedImpersonationLevel = TokenImpersonationLevel.Impersonation;
+                    var dict = new Dictionary<string, object>
+                    {
+                        { "typ", "D" }
+                    };
 
-                var dict = new Dictionary<string, object>();
-                
-                var res = client.ExecSp("[dbo].[sp_test_impersonation]", dict);
+                    var res = client.ExecSp("[dbo].[sp_test_impersonation]", dict);
 
-                Console.WriteLine($"ret cod: {res.Item1}, usr: {res.Item3[0]}");
-            }
-            catch (Exception ex)
-            { 
-                Console.WriteLine(ex.ToString());
+                    Console.WriteLine($"ret val: {res.ReturnValue}, usr: {res.DataSet[0][0]}");
+                }
+                catch (FaultException<TaskFault> ex)
+                {
+                    var detail = ex.Detail;
+
+                    Console.WriteLine($"FaultException<MathFault>: Math fault while doing {detail.Operation}. Problem: {detail.ProblemType}");
+
+                    client.Abort();
+                }
+                catch (FaultException ex)
+                {
+                    Console.WriteLine($"Unknown FaultException: {ex.GetType().Name} - {ex.Message}");
+
+                    client.Abort();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"EXCEPTION: {ex.GetType().Name}  - {ex.Message}");
+
+                    client.Abort();
+                }
             }
         }
     }
