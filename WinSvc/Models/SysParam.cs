@@ -7,5 +7,7 @@
         public string DataType { get; set; }
 
         public short MaxLength { get; set; }
+
+        public bool IsOutput { get; set; }
     }
 }

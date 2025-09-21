@@ -291,6 +291,37 @@ namespace WinSvc
                     }
                 }
 
+                if (sysPrms.Where(x => x.IsOutput == true).Any())
+                {
+                    var lstOutput = sysPrms.Where(x => x.IsOutput == true).ToList();
+
+                    foreach (var itm in lstOutput)
+                    {
+                        var outParan = new SqlParameter()
+                        {
+                            ParameterName = itm.ParameterName,
+                            Direction = ParameterDirection.Output
+                        };
+
+                        var typ = itm.DataType;
+
+                        switch (typ)
+                        {
+                            case "int":
+                                outParan.SqlDbType = SqlDbType.Int;
+                                outParan.Size = itm.MaxLength;
+                                break;
+
+                            // etc ...
+
+                            default:
+                                throw new InvalidOperationException("Not supported type");
+                        }
+
+                        command.Parameters.Add(outParan);
+                    }
+                }
+
                 var returnParameter = command.Parameters.Add("@ReturnVal", SqlDbType.Int);
                 returnParameter.Direction = ParameterDirection.ReturnValue;
 
@@ -313,9 +344,18 @@ namespace WinSvc
                     }
 
                     // next result to return value result
-                    reader.NextResult();
+                    var flg = reader.NextResult();
+
+                    Log.Debug($"There are more results: {flg}");
 
                     retVal = (int)returnParameter.Value;
+
+                    var lst = new List<ParameterDirection>() { ParameterDirection.Output, ParameterDirection.InputOutput };
+
+                    outVars = command.Parameters
+                        .Cast<SqlParameter>()
+                        .Where(x => lst.Contains(x.Direction))
+                        .ToDictionary(x => x.ParameterName.Replace("@", string.Empty), x => x.Value);
 
                     var res = new SpResult
                     {
@@ -338,7 +378,7 @@ namespace WinSvc
                 context.Database.Log = s => Log.Debug(s);
 #endif
 
-                var prms = context.Database.SqlQuery<SysParam>($@"select [name] ParameterName, TYPE_NAME(user_type_id) DataType, max_length AS MaxLength 
+                var prms = context.Database.SqlQuery<SysParam>($@"select [name] ParameterName, TYPE_NAME(user_type_id) DataType, max_length AS MaxLength, is_output IsOutput 
 from sys.parameters 
 where object_id = OBJECT_ID('{spName}')").ToList();
 
