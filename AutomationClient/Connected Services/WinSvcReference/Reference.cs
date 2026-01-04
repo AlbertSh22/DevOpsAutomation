@@ -15,13 +15,185 @@ namespace AutomationClient.WinSvcReference {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="SpResult", Namespace="http://schemas.datacontract.org/2004/07/WinSvc")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SysParam", Namespace="http://schemas.datacontract.org/2004/07/WinSvc.Models")]
     [System.SerializableAttribute()]
+    public partial class SysParam : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DataTypeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool IsOutputField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private short MaxLengthField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int ParameterIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ParameterNameField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DataType {
+            get {
+                return this.DataTypeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DataTypeField, value) != true)) {
+                    this.DataTypeField = value;
+                    this.RaisePropertyChanged("DataType");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool IsOutput {
+            get {
+                return this.IsOutputField;
+            }
+            set {
+                if ((this.IsOutputField.Equals(value) != true)) {
+                    this.IsOutputField = value;
+                    this.RaisePropertyChanged("IsOutput");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public short MaxLength {
+            get {
+                return this.MaxLengthField;
+            }
+            set {
+                if ((this.MaxLengthField.Equals(value) != true)) {
+                    this.MaxLengthField = value;
+                    this.RaisePropertyChanged("MaxLength");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ParameterId {
+            get {
+                return this.ParameterIdField;
+            }
+            set {
+                if ((this.ParameterIdField.Equals(value) != true)) {
+                    this.ParameterIdField = value;
+                    this.RaisePropertyChanged("ParameterId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ParameterName {
+            get {
+                return this.ParameterNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ParameterNameField, value) != true)) {
+                    this.ParameterNameField = value;
+                    this.RaisePropertyChanged("ParameterName");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TaskFault", Namespace="http://schemas.datacontract.org/2004/07/WinSvc")]
+    [System.SerializableAttribute()]
+    public partial class TaskFault : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OperationField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ProblemTypeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Operation {
+            get {
+                return this.OperationField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OperationField, value) != true)) {
+                    this.OperationField = value;
+                    this.RaisePropertyChanged("Operation");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ProblemType {
+            get {
+                return this.ProblemTypeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ProblemTypeField, value) != true)) {
+                    this.ProblemTypeField = value;
+                    this.RaisePropertyChanged("ProblemType");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SpResult", Namespace="http://schemas.datacontract.org/2004/07/WinSvc.Models")]
+    [System.SerializableAttribute()]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(AutomationClient.WinSvcReference.SysParam[]))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(AutomationClient.WinSvcReference.SysParam))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(AutomationClient.WinSvcReference.TaskFault))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(System.Collections.Generic.Dictionary<string, object>))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(string[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(object[][]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(object[]))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(AutomationClient.WinSvcReference.TaskFault))]
     public partial class SpResult : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
@@ -111,70 +283,16 @@ namespace AutomationClient.WinSvcReference {
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="TaskFault", Namespace="http://schemas.datacontract.org/2004/07/WinSvc")]
-    [System.SerializableAttribute()]
-    public partial class TaskFault : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string OperationField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ProblemTypeField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Operation {
-            get {
-                return this.OperationField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.OperationField, value) != true)) {
-                    this.OperationField = value;
-                    this.RaisePropertyChanged("Operation");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string ProblemType {
-            get {
-                return this.ProblemTypeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ProblemTypeField, value) != true)) {
-                    this.ProblemTypeField = value;
-                    this.RaisePropertyChanged("ProblemType");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WinSvcReference.ITaskHelper")]
     public interface ITaskHelper {
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/GetSpParams", ReplyAction="http://tempuri.org/ITaskHelper/GetSpParamsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(AutomationClient.WinSvcReference.TaskFault), Action="http://tempuri.org/ITaskHelper/GetSpParamsTaskFaultFault", Name="TaskFault", Namespace="http://schemas.datacontract.org/2004/07/WinSvc")]
+        AutomationClient.WinSvcReference.SysParam[] GetSpParams(string spName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/GetSpParams", ReplyAction="http://tempuri.org/ITaskHelper/GetSpParamsResponse")]
+        System.Threading.Tasks.Task<AutomationClient.WinSvcReference.SysParam[]> GetSpParamsAsync(string spName);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITaskHelper/ExecSp", ReplyAction="http://tempuri.org/ITaskHelper/ExecSpResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(AutomationClient.WinSvcReference.TaskFault), Action="http://tempuri.org/ITaskHelper/ExecSpTaskFaultFault", Name="TaskFault", Namespace="http://schemas.datacontract.org/2004/07/WinSvc")]
@@ -209,6 +327,14 @@ namespace AutomationClient.WinSvcReference {
         
         public TaskHelperClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
+        }
+        
+        public AutomationClient.WinSvcReference.SysParam[] GetSpParams(string spName) {
+            return base.Channel.GetSpParams(spName);
+        }
+        
+        public System.Threading.Tasks.Task<AutomationClient.WinSvcReference.SysParam[]> GetSpParamsAsync(string spName) {
+            return base.Channel.GetSpParamsAsync(spName);
         }
         
         public AutomationClient.WinSvcReference.SpResult ExecSp(string spName, System.Collections.Generic.Dictionary<string, object> prms) {

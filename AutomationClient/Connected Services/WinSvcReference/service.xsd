@@ -1,19 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/WinSvc.Models" />
   <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-  <xs:import namespace="http://schemas.datacontract.org/2004/07/WinSvc" />
+  <xs:element name="GetSpParams">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="spName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSpParamsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/WinSvc.Models" minOccurs="0" name="GetSpParamsResult" nillable="true" type="q1:ArrayOfSysParam" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="ExecSp">
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="spName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="prms" nillable="true" type="q1:ArrayOfKeyValueOfstringanyType" />
+        <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="prms" nillable="true" type="q2:ArrayOfKeyValueOfstringanyType" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="ExecSpResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/WinSvc" minOccurs="0" name="ExecSpResult" nillable="true" type="q2:SpResult" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/WinSvc.Models" minOccurs="0" name="ExecSpResult" nillable="true" type="q3:SpResult" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -17,18 +17,22 @@ namespace AutomationClient
 
         static void Main(string[] args)
         {
+            var spName = "[dbo].[sp_test_impersonation]";
+            
             using (var client = new TaskHelperClient(EndpointConfigurationName))
             {
                 try
                 {
                     client.ClientCredentials.Windows.AllowedImpersonationLevel = TokenImpersonationLevel.Impersonation;
 
+                    var prms = client.GetSpParams(spName);
+
                     var dict = new Dictionary<string, object>
                     {
                         { "typ", "D" }
                     };
 
-                    var res = client.ExecSp("[dbo].[sp_test_impersonation]", dict);
+                    var res = client.ExecSp(spName, dict);
 
                     Console.WriteLine($"ret val: {res.ReturnValue}, usr: {res.DataSet[0][0]}");
                 }

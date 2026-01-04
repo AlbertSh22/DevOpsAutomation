@@ -83,11 +83,17 @@
     <None Include="Connected Services\WinSvcReference\AutomationClient.WinSvcReference.SpResult.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Connected Services\WinSvcReference\AutomationClient.WinSvcReference.SysParam.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Connected Services\WinSvcReference\service.wsdl" />
     <None Include="Connected Services\WinSvcReference\service.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\WinSvcReference\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\WinSvcReference\WinSvc.Models.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\WinSvcReference\WinSvc.xsd">

@@ -99,6 +99,8 @@
     <Compile Include="ExSvc.Designer.cs">
       <DependentUpon>ExSvc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\QueryBuilder.cs" />
+    <Compile Include="Models\SpResult.cs" />
     <Compile Include="Models\SysParam.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">

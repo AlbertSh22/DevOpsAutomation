@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Security.Principal;
 using System.ServiceModel;
 using WinSvc.Dal;
+using WinSvc.Helpers;
 using WinSvc.Models;
 
 namespace WinSvc
@@ -26,6 +27,10 @@ namespace WinSvc
 
         #endregion
 
+        [OperationContract]
+        [FaultContract(typeof(TaskFault))]
+        List<SysParam> GetSpParams(string spName);
+        
         [OperationContract]
         [FaultContract(typeof(TaskFault))]
         SpResult ExecSp(string spName, Dictionary<string, object> prms);
@@ -53,21 +58,25 @@ namespace WinSvc
 
     #region Models
 
-    [DataContract]
-    public class SpResult
-    { 
-        [DataMember]
-        public int ReturnValue { get; set; }
+    #region Obsolete
 
-        [DataMember]
-        public Dictionary<string, object> OutputParams { get; set; }
+    //[DataContract]
+    //public class SpResult
+    //{ 
+    //    [DataMember]
+    //    public int ReturnValue { get; set; }
 
-        [DataMember]
-        public string[] Columns { get; set; }
+    //    [DataMember]
+    //    public Dictionary<string, object> OutputParams { get; set; }
 
-        [DataMember]
-        public object[][] DataSet { get; set; }
-    }
+    //    [DataMember]
+    //    public string[] Columns { get; set; }
+
+    //    [DataMember]
+    //    public object[][] DataSet { get; set; }
+    //}
+
+    #endregion
 
     #endregion
 
@@ -121,38 +130,23 @@ namespace WinSvc
 
         #endregion
 
-        public SpResult ExecSp(string spName, Dictionary<string, object> prms)
+        public List<SysParam> GetSpParams(string spName)
         {
             var method = MethodBase.GetCurrentMethod().Name;
 
             try
             {
-                Log.Debug($"Try to exec: {spName} ...");
+                Log.Information($"In {method}.");
+
+                // TODO: to dump params
+                // ...
 
                 DumpIdentityInfo();
 
-                var ctx = ServiceSecurityContext.Current;
-                var lvl = ctx.WindowsIdentity.ImpersonationLevel;
-
-                if ((lvl != TokenImpersonationLevel.Impersonation)
-                    && (lvl != TokenImpersonationLevel.Delegation)
-                )
-                {
-                    var err = $"This level ({lvl}) of impersonation is not allowed";
-                    
-                    Log.Error(err);
-                    
-                    var fault = new TaskFault 
-                    { 
-                        Operation = method,
-                        ProblemType = err
-                    };
-
-                    throw new FaultException<TaskFault>(fault);
-                }
+                EnsureLevelEnought(method);
 
                 // Impersonate.
-                using (ctx.WindowsIdentity.Impersonate())
+                using (ServiceSecurityContext.Current.WindowsIdentity.Impersonate())
                 {
                     // Make a system call in the caller's context and ACLs 
                     // on the system resource are enforced in the caller's context. 
@@ -160,7 +154,7 @@ namespace WinSvc
 
                     DumpIdentityInfo();
 
-                    return ExecSpInternal(spName, prms);
+                    return GetSpParamsInternal(spName);
                 }
             }
             catch (FaultException<TaskFault>)
@@ -180,6 +174,78 @@ namespace WinSvc
                 throw new FaultException<TaskFault>(fault);
             }
         }
+        
+        public SpResult ExecSp(string spName, Dictionary<string, object> prms)
+        {
+            var method = MethodBase.GetCurrentMethod().Name;
+
+            try
+            {
+                Log.Debug($"Try to exec: {spName} ...");
+
+                DumpIdentityInfo();
+
+                EnsureLevelEnought(method);
+
+                #region Obsolete
+
+                /* var ctx = ServiceSecurityContext.Current;
+                var lvl = ctx.WindowsIdentity.ImpersonationLevel;
+
+                if ((lvl != TokenImpersonationLevel.Impersonation)
+                    && (lvl != TokenImpersonationLevel.Delegation)
+                )
+                {
+                    var err = $"This level ({lvl}) of impersonation is not allowed";
+                    
+                    Log.Error(err);
+                    
+                    var fault = new TaskFault 
+                    { 
+                        Operation = method,
+                        ProblemType = err
+                    };
+
+                    throw new FaultException<TaskFault>(fault);
+                } */
+
+                #endregion
+
+                // Impersonate.
+                using (ServiceSecurityContext.Current.WindowsIdentity.Impersonate())
+                {
+                    // Make a system call in the caller's context and ACLs 
+                    // on the system resource are enforced in the caller's context. 
+                    Log.Debug("Impersonating the caller imperatively");
+
+                    DumpIdentityInfo();
+
+                    return ExecSpInternal(spName, prms);
+                }
+            }
+            catch (FaultException<TaskFault>)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                #region Obsolete
+
+                //Log.Error(ex, $"{method} failed");
+
+                //var fault = new TaskFault
+                //{
+                //    Operation = method,
+                //    ProblemType = ex.Message
+                //};
+
+                #endregion
+
+                var fault = ProcessError(method, ex);
+
+                throw new FaultException<TaskFault>(fault);
+            }
+        }
 
         static void DumpIdentityInfo()
         {
@@ -188,6 +254,42 @@ namespace WinSvc
             Log.Debug($"\t\tThread Identity            :{identity.Name}");
             Log.Debug($"\t\tThread Impersonation level :{identity.ImpersonationLevel}");
             Log.Debug($"\t\thToken                     :{identity.Token}");
+        }
+
+        static void EnsureLevelEnought(string method)
+        {
+            var ctx = ServiceSecurityContext.Current;
+            var lvl = ctx.WindowsIdentity.ImpersonationLevel;
+
+            if ((lvl != TokenImpersonationLevel.Impersonation)
+                    && (lvl != TokenImpersonationLevel.Delegation)
+                )
+            {
+                var err = $"This level ({lvl}) of impersonation is not allowed";
+
+                Log.Error(err);
+
+                var fault = new TaskFault
+                {
+                    Operation = method,
+                    ProblemType = err
+                };
+
+                throw new FaultException<TaskFault>(fault);
+            }
+        }
+
+        static TaskFault ProcessError(string method, Exception error)
+        {
+            Log.Error(error, $"{method} failed");
+
+            var fault = new TaskFault
+            {
+                Operation = method,
+                ProblemType = error.Message
+            };
+
+            return fault;
         }
 
         #region Internals
@@ -239,7 +341,7 @@ namespace WinSvc
         static SpResult ExecSpInternal(string spName, Dictionary<string, object> prms)
         {
 
-            List<SysParam> sysPrms = GetParams(spName);
+            List<SysParam> sysPrms = GetSpParamsInternal(spName);
 
             int retVal = 0;
             var outVars = new Dictionary<string, object>();
@@ -370,7 +472,7 @@ namespace WinSvc
             }
         }
 
-        static List<SysParam> GetParams(string spName)
+        static List<SysParam> GetSpParamsInternal(string spName)
         {
             using (var context = new RoboSvcEntities())
             {
@@ -378,14 +480,16 @@ namespace WinSvc
                 context.Database.Log = s => Log.Debug(s);
 #endif
 
-                var prms = context.Database.SqlQuery<SysParam>($@"select [name] ParameterName, TYPE_NAME(user_type_id) DataType, max_length AS MaxLength, is_output IsOutput 
-from sys.parameters 
-where object_id = OBJECT_ID('{spName}')").ToList();
+                var sql = QueryBuilder.ComposeGetSpParams(spName);
+                
+                var prms = context.Database.SqlQuery<SysParam>(sql).ToList();
 
+#if DEBUG
                 if (prms.Any())
                 { 
-                    Log.Debug($"param name: {prms.First().ParameterName}");
+                    Log.Debug($"param name: {prms.First().ParameterName}"); // just dump the 1st param
                 }
+#endif
 
                 return prms;
             }

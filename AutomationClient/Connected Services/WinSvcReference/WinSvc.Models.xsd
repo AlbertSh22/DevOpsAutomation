@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/WinSvc.Models" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/WinSvc.Models" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="ArrayOfSysParam">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SysParam" nillable="true" type="tns:SysParam" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSysParam" nillable="true" type="tns:ArrayOfSysParam" />
+  <xs:complexType name="SysParam">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DataType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsOutput" type="xs:boolean" />
+      <xs:element minOccurs="0" name="MaxLength" type="xs:short" />
+      <xs:element minOccurs="0" name="ParameterId" type="xs:int" />
+      <xs:element minOccurs="0" name="ParameterName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SysParam" nillable="true" type="tns:SysParam" />
+  <xs:complexType name="SpResult">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Columns" nillable="true" type="q1:ArrayOfstring" />
+      <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="DataSet" nillable="true" type="q2:ArrayOfArrayOfanyType" />
+      <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="OutputParams" nillable="true" type="q3:ArrayOfKeyValueOfstringanyType" />
+      <xs:element minOccurs="0" name="ReturnValue" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SpResult" nillable="true" type="tns:SpResult" />
+</xs:schema>
